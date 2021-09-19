@@ -49,18 +49,19 @@ class ProductService {
                 const response = await this.getProduct(product_id);
                 const { product } = response;
 
-                if (!product.tags.includes("package")) continue;
+                if (product.productType != "Pack") continue;
 
-                // If the product is a bundle, get inner products' handles from tags
-                const innerProducts = product.tags
-                    .filter(tag => tag.match(/^product-/))
-                    .map(el => el.split("product-")[1]);
+                // If the product is a bundle, get inner products' handles from 'bundle_price' metafield (JSON)
 
-                if (innerProducts.length === 0) continue;
+                const bundlePriceObj = product.metafields.edges.find(
+                    el => el.node.key == "bundle_price"
+                ).node;
+
+                const value = JSON.parse(bundlePriceObj.value);
 
                 data.push({
                     bundleTitle: product.title,
-                    subproductHandles: innerProducts,
+                    subproducts: value,
                     quantity,
                     properties
                 });

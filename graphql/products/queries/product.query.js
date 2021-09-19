@@ -6,8 +6,17 @@ const getProductById = gql`
             id
             handle
             title
-            description
             tags
+            productType
+            metafields(first: 250) {
+                edges {
+                    node {
+                        namespace
+                        key
+                        value
+                    }
+                }
+            }
         }
     }
 `;

@@ -3,7 +3,7 @@ const logStack = (stack, acc = "") => {
     for (const el of stack) {
         if (el.route && el.route.path) {
             const fullPath =
-                "/" + (acc == "" ? "" : acc.match(/\w{2,}/g).join("/")) + el.route.path;
+                "/" + (acc == "" ? "" : acc.match(/\w{2,}-?\w+/g).join("/")) + el.route.path;
             const methods = el.route.methods;
 
             routes.push({ fullPath, methods });

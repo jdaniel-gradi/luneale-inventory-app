@@ -32,13 +32,8 @@ app.listen(port, () => {
 
 if (args.includes("ngrok")) {
     const ngrok = require("ngrok");
-    (async function () {
-        try {
-            const url = await ngrok.connect(port);
-            console.log(`Tunnel created at: ${url}`);
-        } catch (err) {
-            console.error("Couldn't initialize tunnel");
-            console.error(err);
-        }
-    })();
+    ngrok
+        .connect(port)
+        .then(url => console.log(`Tunnel created at: ${url}`))
+        .catch(err => console.error(err));
 }

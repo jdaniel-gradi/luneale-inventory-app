@@ -44,7 +44,7 @@ class ProductService {
         const data = [];
 
         for (const item of line_items) {
-            const { product_id, quantity, properties } = item;
+            const { product_id, quantity, properties, variant_id, variant_title } = item;
             try {
                 const response = await this.getProduct(product_id);
                 const { product } = response;
@@ -60,7 +60,16 @@ class ProductService {
                 const value = JSON.parse(bundlePriceObj.value);
 
                 data.push({
-                    bundleTitle: product.title,
+                    bundleDetails: {
+                        product: {
+                            title: product.title,
+                            id: product.id
+                        },
+                        variant: {
+                            title: variant_title,
+                            id: variant_id
+                        }
+                    },
                     subproducts: value,
                     quantity,
                     properties
@@ -73,6 +82,11 @@ class ProductService {
         }
 
         return data;
+    }
+
+    async reduceBundleInventories(arr) {
+        for (const subProd of arr) {
+        }
     }
 }
 

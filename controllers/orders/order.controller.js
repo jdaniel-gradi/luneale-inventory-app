@@ -25,11 +25,21 @@ class Order {
 
         if (!pendingMods) return res.sendStatus(500);
 
-        if (pendingMods.length > 0) {
-            // Found bundle subproducts
-            console.log("Found bundle subproducts!");
-            console.log(JSON.stringify(pendingMods, 0, 2));
+        if (pendingMods.length == 0) return res.sendStatus(200);
+
+        // Found bundle subproducts
+        console.log("Found bundle subproducts!");
+        console.log(JSON.stringify(pendingMods, 0, 2));
+
+        try {
+            const response = await productServiceInstance.reduceBundleInventories(pendingMods);
+
+            console.log(response);
+        } catch (err) {
+            console.error(err);
+            return res.sendStatus(500);
         }
+
         return res.sendStatus(200);
     }
 }

@@ -1,5 +1,7 @@
 require("dotenv").config();
 
+const axiosClient = require("../../REST");
+
 const {
     beginOrderEdit,
     addVariantToOrder,
@@ -9,12 +11,17 @@ const {
 
 const graphQLClient = require("../../graphql");
 
-const { SHOPIFY_GQL_ENDPOINT: gql_url, SHOPIFY_GQL_BASEID: gql_baseId } = process.env;
+const {
+    SHOPIFY_GQL_ENDPOINT: gql_url,
+    SHOPIFY_GQL_BASEID: gql_baseId,
+    SHOPIFY_BASE_REST_URL: restBaseUrl
+} = process.env;
 
 class OrderService {
     constructor() {
         this.baseUrl = gql_url;
         this.baseGQLId = gql_baseId;
+        this.baseRestUrl = restBaseUrl;
     }
 
     async beginOrderEdit(orderId) {
@@ -59,6 +66,14 @@ class OrderService {
 
         const response = await graphQLClient.request(endOrderEdit, {
             orderEditId
+        });
+
+        return response;
+    }
+
+    async updateOrderNote(orderId, note) {
+        const response = await axiosClient.put(`${this.baseRestUrl}/orders/${orderId}.json`, {
+            note
         });
 
         return response;

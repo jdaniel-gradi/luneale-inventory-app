@@ -19,10 +19,10 @@ class ProductService {
         this.baseGQLId = gql_baseId;
     }
 
-    async getProduct(productId) {
-        const response = await graphQLClient.request(getProductById, {
-            id: `${this.baseGQLId}/Product/${productId}`
-        });
+    async getProduct(id) {
+        if (!id.match(/shopify/)) id = `${this.baseGQLId}/ProductVariant/${id}`;
+
+        const response = await graphQLClient.request(getProductById, { id });
 
         return response;
     }
@@ -31,6 +31,14 @@ class ProductService {
         const response = await graphQLClient.request(getProductByHandle, {
             handle: productHandle
         });
+
+        return response;
+    }
+
+    async getVariant(id) {
+        if (!id.match(/shopify/)) id = `${this.baseGQLId}/ProductVariant/${id}`;
+
+        const response = await graphQLClient.request(getVariant, { id });
 
         return response;
     }

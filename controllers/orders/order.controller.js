@@ -2,9 +2,11 @@
 require("dotenv").config();
 
 // Requires (Service, Utils, graphql[query, mutations, etc...])
+const { OrderService } = require("../../services/orders/order.service");
 const { ProductService } = require("../../services/products/product.service");
 
 // Instances (All class instances)
+const orderServiceInstance = new OrderService();
 const productServiceInstance = new ProductService();
 
 class Order {
@@ -32,9 +34,31 @@ class Order {
         console.log(JSON.stringify(pendingMods, 0, 2));
 
         try {
-            const response = await productServiceInstance.reduceBundleInventories(pendingMods);
+            let response = await productServiceInstance.reduceBundleInventories(pendingMods);
 
+            // Reduce function returns array of objects with productId, tax rate and provided price (product metafield) for further processing
             console.log(response);
+            // Aggregate tax rules array into object with unique rates as keys
+            const taxes = {};
+            for (const rule of response) {
+                const { price, quantity } = rule;
+                const VAT = rule.VAT / 100;
+
+                taxes[VAT] = taxes[VAT] || 0;
+                taxes[VAT] += ((price / (1 + VAT)) * quantity) / VAT;
+            }
+            console.log(taxes);
+            // Create note in order that lays out collected info
+            let note = "Collected taxes:\n";
+
+            for (const k in Object.keys(taxes)) {
+                note += `${parseFloat(k) * 100}%: ${taxes[k]}\n`;
+            }
+
+            response = await orderServiceInstance.updateOrderNote(orderId, note);
+
+            console.log("Updated order note");
+            console.log(note);
         } catch (err) {
             console.error(err);
             return res.sendStatus(500);

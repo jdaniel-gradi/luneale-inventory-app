@@ -27,9 +27,17 @@ const getProductByHandle = gql`
             id
             handle
             title
-            description
             tags
-            variants(first: 50) {
+            metafields(first: 50) {
+                edges {
+                    node {
+                        namespace
+                        key
+                        value
+                    }
+                }
+            }
+            variants(first: 20) {
                 edges {
                     node {
                         id
@@ -41,12 +49,49 @@ const getProductByHandle = gql`
                                 edges {
                                     node {
                                         id
+                                        available
                                         location {
                                             id
                                         }
                                     }
                                 }
                             }
+                        }
+                    }
+                }
+            }
+        }
+    }
+`;
+
+const getVariant = gql`
+    query getVariant($id: ID!) {
+        productVariant(id: $id) {
+            id
+            title
+            selectedOptions {
+                name
+                value
+            }
+            product {
+                id
+                handle
+                metafields(first: 50) {
+                    edges {
+                        node {
+                            namespace
+                            key
+                            value
+                        }
+                    }
+                }
+            }
+            inventoryItem {
+                id
+                inventoryLevels(first: 50) {
+                    edges {
+                        node {
+                            id
                         }
                     }
                 }
@@ -111,4 +156,10 @@ const getProductsWithQuery = gql`
     }
 `;
 
-module.exports = { getProductById, getProductByHandle, getVariantBySKU, getProductsWithQuery };
+module.exports = {
+    getProductById,
+    getProductByHandle,
+    getVariantBySKU,
+    getProductsWithQuery,
+    getVariant
+};

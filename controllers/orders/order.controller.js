@@ -85,7 +85,7 @@ class Order {
             let note = "Collected taxes:\n";
 
             for (const k of Object.keys(taxes)) {
-                note += `${parseFloat(k) * 100}%: ${taxes[k]}\n`;
+                if (parseFloat(taxes[k]) > 0) note += `${parseFloat(k) * 100}%: ${taxes[k]}\n`;
             }
 
             response = await orderServiceInstance.updateOrderNote(orderId, note);

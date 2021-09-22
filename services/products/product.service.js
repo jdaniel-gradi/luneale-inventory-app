@@ -124,9 +124,10 @@ class ProductService {
 
                 console.log(product);
 
-                if (bundle.duo && subProd.handle.includes("cup")) {
+                if (bundleDetails.duo && subProd.handle.includes("cup")) {
                     const arr = bundleDetails.variant.title.split("/").map(el => el.trim());
                     variantTitle = processedCup ? arr[1] : arr[0];
+                    console.log("Variant title:", variantTitle);
                 } else {
                     variantTitle = bundleDetails.variant.title;
                 }
@@ -139,7 +140,10 @@ class ProductService {
                         return true;
                     });
 
-                if (!variant) continue;
+                if (!variant) {
+                    console.log("No variant found");
+                    continue;
+                }
 
                 // Extract product VAT rate from metafields
                 const VAT = product.metafields.edges

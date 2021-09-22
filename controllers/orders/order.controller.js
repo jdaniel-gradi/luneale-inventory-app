@@ -13,6 +13,8 @@ class Order {
     async handleNewOrder(req, res) {
         if (!req.body) return res.sendStatus(200);
 
+        console.log(JSON.stringify(req.body));
+
         const { id: orderId, line_items, email, order_number: orderNumber } = req.body;
 
         // ! Only moves forward if customer email address has a gradiweb.com domain (remove before going live!!!!)
@@ -37,7 +39,7 @@ class Order {
             let response = await productServiceInstance.reduceBundleInventories(pendingMods);
 
             // Reduce function returns array of objects with productId, tax rate and provided price (product metafield) for further processing
-            console.log(response);
+            console.log("response:", response);
 
             // Aggregate tax rules array into object with unique rates as keys
             const taxes = {};
@@ -47,7 +49,7 @@ class Order {
                 const VAT = rule.VAT / 100;
 
                 taxes[VAT] = taxes[VAT] || 0;
-                taxes[VAT] += ((price / (1 + VAT)) * quantity) / VAT;
+                taxes[VAT] += (price / (1 + VAT)) * quantity * VAT;
             }
 
             console.log(taxes);
@@ -57,7 +59,7 @@ class Order {
                 // Might be in GQL format
                 let bundleId = el.bundleDetails.product.id;
                 if (bundleId.includes("/")) bundleId = bundleId.split("/");
-                const productId = typeof bundleId == "string" ? bundleId : slice(-1)[0];
+                const productId = typeof bundleId == "string" ? bundleId : bundleId.slice(-1)[0];
 
                 return productId;
             });

@@ -20,7 +20,7 @@ class ProductService {
     }
 
     async getProduct(id) {
-        if (!id.match(/shopify/)) id = `${this.baseGQLId}/ProductVariant/${id}`;
+        if (!String(id).match(/shopify/)) id = `${this.baseGQLId}/Product/${id}`;
 
         const response = await graphQLClient.request(getProductById, { id });
 
@@ -36,7 +36,7 @@ class ProductService {
     }
 
     async getVariant(id) {
-        if (!id.match(/shopify/)) id = `${this.baseGQLId}/ProductVariant/${id}`;
+        if (!String(id).match(/shopify/)) id = `${this.baseGQLId}/ProductVariant/${id}`;
 
         const response = await graphQLClient.request(getVariant, { id });
 
@@ -118,20 +118,24 @@ class ProductService {
 
                 let response = await this.getProductByHandle(subProd.handle);
 
-                const product = response.product;
+                console.log(response);
+
+                const product = response.productByHandle;
+
+                console.log(product);
 
                 if (bundle.duo && subProd.handle.includes("cup")) {
                     const arr = bundleDetails.variant.title.split("/").map(el => el.trim());
                     variantTitle = processedCup ? arr[1] : arr[0];
                 } else {
-                    variantTitle = bundle.variant.title;
+                    variantTitle = bundleDetails.variant.title;
                 }
 
                 const variant = product.variants.edges
                     .map(el => el.node)
                     .find(el => el.title == variantTitle);
 
-                if (!variant) return;
+                if (!variant) continue;
 
                 // Extract product VAT rate from metafields
                 const VAT = product.metafields.edges
@@ -151,10 +155,12 @@ class ProductService {
 
                 response = await this.reduceInventory(invLevelId, quantity);
                 console.log(
-                    `Reduced inventory of variant ${subProd.bundleDetails.variant.title} from product ${subProd.bundleDetails.product.title} by ${quantity}`
+                    `Reduced inventory of variant ${bundleDetails.variant.title} from product ${bundleDetails.product.title} by ${quantity}`
                 );
             }
         }
+
+        console.log("Taxrules:", taxRules);
 
         return taxRules;
     }

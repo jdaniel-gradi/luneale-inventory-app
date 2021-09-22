@@ -73,7 +73,10 @@ class OrderService {
 
     async updateOrderNote(orderId, note) {
         const response = await axiosClient.put(`${this.baseRestUrl}/orders/${orderId}.json`, {
-            note
+            order: {
+                id: orderId,
+                note
+            }
         });
 
         return response;

@@ -133,7 +133,11 @@ class ProductService {
 
                 const variant = product.variants.edges
                     .map(el => el.node)
-                    .find(el => el.title == variantTitle);
+                    .find(el => {
+                        // If product only has default variant, select it
+                        if (product.variants.edges.length > 1) return el.title == variantTitle;
+                        return true;
+                    });
 
                 if (!variant) continue;
 
@@ -153,7 +157,7 @@ class ProductService {
                     el => el.node.available > 0
                 ).node.id;
 
-                response = await this.reduceInventory(invLevelId, quantity);
+                response = await this.reduceInventory(invLevelId, -parseInt(quantity));
                 console.log(
                     `Reduced inventory of variant ${bundleDetails.variant.title} from product ${bundleDetails.product.title} by ${quantity}`
                 );

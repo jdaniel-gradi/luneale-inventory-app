@@ -79,10 +79,12 @@ class Order {
                 }
             }
 
+            console.log(taxes);
+
             // Create note in order that lays out collected info
             let note = "Collected taxes:\n";
 
-            for (const k in Object.keys(taxes)) {
+            for (const k of Object.keys(taxes)) {
                 note += `${parseFloat(k) * 100}%: ${taxes[k]}\n`;
             }
 

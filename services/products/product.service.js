@@ -157,9 +157,15 @@ class ProductService {
                     quantity
                 });
 
-                const invLevelId = variant.inventoryItem.inventoryLevels.edges.find(
-                    el => el.node.available > 0
-                ).node.id;
+                let invLevelId = variant.inventoryItem.inventoryLevels.edges.find(
+                    el => parseInt(el.node.available) > 0
+                );
+
+                invLevelId = invLevelId
+                    ? invLevelId.node.id
+                    : variant.inventoryItem.inventoryLevels.edges[0].node.id;
+
+                console.log("InvLevelId:", invLevelId);
 
                 response = await this.reduceInventory(invLevelId, -parseInt(quantity));
                 console.log(

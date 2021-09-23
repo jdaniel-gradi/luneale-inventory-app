@@ -15,7 +15,13 @@ class Order {
 
         console.log(JSON.stringify(req.body));
 
-        const { id: orderId, line_items, email, order_number: orderNumber } = req.body;
+        const {
+            id: orderId,
+            line_items,
+            email,
+            order_number: orderNumber,
+            current_total_price: orderTotal
+        } = req.body;
 
         // ! Only moves forward if customer email address has a gradiweb.com domain (remove before going live!!!!)
 
@@ -49,7 +55,8 @@ class Order {
                 const VAT = rule.VAT / 100;
 
                 taxes[VAT] = taxes[VAT] || 0;
-                taxes[VAT] += (price / (1 + VAT)) * quantity * VAT;
+                // Price is a proportion of total bundle price
+                taxes[VAT] += ((price * orderTotal) / (1 + VAT)) * quantity * VAT;
             }
 
             console.log(taxes);

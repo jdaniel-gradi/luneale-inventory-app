@@ -107,7 +107,7 @@ class ProductService {
         return response;
     }
 
-    async reduceBundleInventories(arr) {
+    async modifyBundleInventories(arr, reduce = true) {
         const taxRules = [];
         let processedCup = false;
 
@@ -167,7 +167,10 @@ class ProductService {
 
                 console.log("InvLevelId:", invLevelId);
 
-                response = await this.reduceInventory(invLevelId, -parseInt(quantity));
+                response = await this.reduceInventory(
+                    invLevelId,
+                    parseInt(quantity) * (reduce ? -1 : 1)
+                );
                 console.log(
                     `Reduced inventory of variant ${bundleDetails.variant.title} from product ${bundleDetails.product.title} by ${quantity}`
                 );

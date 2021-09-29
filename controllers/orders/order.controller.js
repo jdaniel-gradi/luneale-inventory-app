@@ -10,6 +10,28 @@ const orderServiceInstance = new OrderService();
 const productServiceInstance = new ProductService();
 
 class Order {
+    async handleCancelledOrder(req, res) {
+        if (!req.body) return res.sendStatus(200);
+
+        console.log(JSON.stringify(req.body, 0, 2));
+
+        // ! Only moves forward if customer email address has a gradiweb.com domain (remove before going live!!!!)
+
+        if (!email.includes("gradiweb.com")) return res.sendStatus(200);
+
+        console.log(`Received webhook for the cancellation of order ID#${orderId}`);
+
+        // * Get subproducts of bundles if any
+
+        const pendingMods = await productServiceInstance.getBundleSubProducts(line_items);
+
+        if (!pendingMods) return res.sendStatus(500);
+
+        if (pendingMods.length == 0) return res.sendStatus(200);
+
+        return res.sendStatus(200);
+    }
+
     async handleNewOrder(req, res) {
         if (!req.body) return res.sendStatus(200);
 
@@ -29,7 +51,7 @@ class Order {
 
         console.log(`Received webhook for the creation of order ID#${orderId}`);
 
-        // * 1. Get subproducts of bundles if any
+        // * Get subproducts of bundles if any
 
         const pendingMods = await productServiceInstance.getBundleSubProducts(line_items);
 

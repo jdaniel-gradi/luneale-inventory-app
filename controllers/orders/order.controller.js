@@ -76,6 +76,8 @@ class Order {
         try {
             let response = await productServiceInstance.modifyBundleInventories(pendingMods);
 
+            res.sendStatus(200);
+
             // Reduce function returns array of objects with productId, tax rate and provided price (product metafield) for further processing
             console.log("response:", response);
 
@@ -131,12 +133,12 @@ class Order {
 
             console.log(`Added the following note to order #${orderNumber}:`);
             console.log(note);
+
+            return;
         } catch (err) {
             console.error(err);
             return res.sendStatus(500);
         }
-
-        return res.sendStatus(200);
     }
 }
 

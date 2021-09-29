@@ -29,7 +29,17 @@ class Order {
 
         if (pendingMods.length == 0) return res.sendStatus(200);
 
-        return res.sendStatus(200);
+        try {
+            let response = await productServiceInstance.modifyBundleInventories(pendingMods, false);
+
+            console.log("response:", response);
+        } catch (err) {
+            console.error(err);
+
+            return res.sendStatus(500);
+        }
+
+        res.sendStatus(200);
     }
 
     async handleNewOrder(req, res) {
@@ -64,7 +74,7 @@ class Order {
         console.log(JSON.stringify(pendingMods, 0, 2));
 
         try {
-            let response = await productServiceInstance.reduceBundleInventories(pendingMods);
+            let response = await productServiceInstance.modifyBundleInventories(pendingMods);
 
             // Reduce function returns array of objects with productId, tax rate and provided price (product metafield) for further processing
             console.log("response:", response);

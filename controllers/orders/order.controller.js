@@ -13,7 +13,15 @@ class Order {
     async handleCancelledOrder(req, res) {
         if (!req.body) return res.sendStatus(200);
 
-        console.log(JSON.stringify(req.body, 0, 2));
+        console.log(JSON.stringify(req.body));
+
+        const {
+            id: orderId,
+            line_items,
+            email,
+            order_number: orderNumber,
+            current_total_price: orderTotal
+        } = req.body;
 
         // ! Only moves forward if customer email address has a gradiweb.com domain (remove before going live!!!!)
 
@@ -27,7 +35,7 @@ class Order {
 
         if (!pendingMods) return res.sendStatus(500);
 
-        if (pendingMods.length == 0) return res.sendStatus(200);
+        res.sendStatus(200);
 
         try {
             let response = await productServiceInstance.modifyBundleInventories(pendingMods, false);
@@ -38,8 +46,6 @@ class Order {
 
             return res.sendStatus(500);
         }
-
-        res.sendStatus(200);
     }
 
     async handleNewOrder(req, res) {

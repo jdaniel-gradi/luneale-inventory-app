@@ -172,7 +172,9 @@ class ProductService {
                     parseInt(quantity) * (reduce ? -1 : 1)
                 );
                 console.log(
-                    `Reduced inventory of variant ${bundleDetails.variant.title} from product ${bundleDetails.product.title} by ${quantity}`
+                    `${reduce ? "Reduced" : "Increased"} inventory of variant ${
+                        variant.title
+                    } from product ${product.title} by ${quantity}`
                 );
             }
         }

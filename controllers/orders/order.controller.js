@@ -67,7 +67,8 @@ class Order {
 
         if (!pendingMods) return res.sendStatus(500);
 
-        if (pendingMods.length == 0) return res.sendStatus(200);
+        // if (pendingMods.length == 0) return res.sendStatus(200);
+        res.sendStatus(200);
 
         // Found bundle subproducts
         console.log("Found bundle subproducts!");
@@ -75,8 +76,6 @@ class Order {
 
         try {
             let response = await productServiceInstance.modifyBundleInventories(pendingMods);
-
-            res.sendStatus(200);
 
             // Reduce function returns array of objects with productId, tax rate and provided price (product metafield) for further processing
             console.log("response:", response);

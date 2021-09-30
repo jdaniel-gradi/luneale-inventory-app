@@ -105,7 +105,7 @@ class Order {
             });
 
             const nonBundleItems = line_items.filter(
-                el => !bundleProductIds.includes(el.product_id)
+                el => !bundleProductIds.includes(String(el.product_id))
             );
 
             console.log("Found non-bundle items in order");

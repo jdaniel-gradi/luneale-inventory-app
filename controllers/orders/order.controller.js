@@ -24,8 +24,7 @@ class Order {
         } = req.body;
 
         // ! Only moves forward if customer email address has a gradiweb.com domain (remove before going live!!!!)
-
-        if (!email.includes("gradiweb.com")) return res.sendStatus(200);
+        // if (!email.includes("gradiweb.com")) return res.sendStatus(200);
 
         console.log(`Received webhook for the cancellation of order ID#${orderId}`);
 
@@ -62,8 +61,7 @@ class Order {
         } = req.body;
 
         // ! Only moves forward if customer email address has a gradiweb.com domain (remove before going live!!!!)
-
-        if (!email.includes("gradiweb.com")) return res.sendStatus(200);
+        // if (!email.includes("gradiweb.com")) return res.sendStatus(200);
 
         console.log(`Received webhook for the creation of order ID#${orderId}`);
 

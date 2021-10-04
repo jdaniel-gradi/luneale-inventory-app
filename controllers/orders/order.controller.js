@@ -67,14 +67,14 @@ class Order {
 
         console.log(`Received webhook for the creation of order ID#${orderId}`);
 
+        // if (pendingMods.length == 0) return res.sendStatus(200);
+        res.sendStatus(200);
+
         // * Get subproducts of bundles if any
 
         const pendingMods = await productServiceInstance.getBundleSubProducts(line_items);
 
-        if (!pendingMods) return res.sendStatus(500);
-
-        // if (pendingMods.length == 0) return res.sendStatus(200);
-        res.sendStatus(200);
+        // if (!pendingMods) return res.sendStatus(500);
 
         // Found bundle subproducts
         console.log("Found bundle subproducts!");
